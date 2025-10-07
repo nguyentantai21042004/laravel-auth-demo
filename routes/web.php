@@ -68,16 +68,43 @@ Route::get('/profile', function () {
     return view('profile-edit');
 })->name('profile.edit');
 
+Route::get('/profile/password', function () {
+    return view('profile-password');
+})->name('profile.password');
+
 Route::put('/profile/update', function () {
-    // TODO: update profile later
-    return back();
-});
+    $validated = request()->validate([
+        'name' => ['required','string','max:255'],
+        'email' => ['required','email','max:255'],
+    ]);
+    return response()->json(['message' => 'ok', 'data' => $validated]);
+})->middleware('jwt');
 
 Route::put('/profile/password', function () {
-    // TODO: change password later
-    return back();
-});
+    $validated = request()->validate([
+        'current_password' => ['required','string'],
+        'new_password' => ['required','string','min:8','confirmed'],
+    ]);
+    $payload = request()->attributes->get('jwt');
+    if (!$payload || !isset($payload['sub'])) {
+        return response()->json(['message' => 'Unauthorized'], 401);
+    }
+    $user = \App\Models\User::find($payload['sub']);
+    if (!$user) {
+        return response()->json(['message' => 'User not found'], 404);
+    }
+    if (!\Illuminate\Support\Facades\Hash::check($validated['current_password'], $user->password)) {
+        return response()->json(['message' => 'Current password is incorrect'], 422);
+    }
+    $user->password = \Illuminate\Support\Facades\Hash::make($validated['new_password']);
+    $user->save();
+    return response()->json(['message' => 'ok']);
+})->middleware('jwt');
 
 Route::get('/profile-edit', function () {
     return view('profile-edit');
 })->name('profile-edit');
+
+Route::get('/logout', function () {
+    return view('logout');
+})->name('logout');

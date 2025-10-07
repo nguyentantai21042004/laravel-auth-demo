@@ -16,7 +16,7 @@
                 <div class="nav-links">
                     <a href="/dashboard" class="nav-link">Dashboard</a>
                     <a href="/profile" class="nav-link">Hồ sơ</a>
-                    <button id="logoutBtn" class="nav-link" style="background: none; border: none; cursor: pointer;">Đăng xuất</button>
+                    <a href="/logout" class="nav-link">Đăng xuất</a>
                 </div>
             </nav>
 
@@ -173,15 +173,6 @@
         // realtime via polling 5s
         setInterval(() => { updateJwtUI(); fetchUsers(); }, 5000);
 
-        // logout clears token and back to login
-        const logoutBtn = document.getElementById('logoutBtn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                localStorage.removeItem('jwt');
-                window.location.href = '/login';
-            });
-        }
     })();
     </script>
 </body>

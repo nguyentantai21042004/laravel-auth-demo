@@ -61,6 +61,20 @@
     </div>
     <script>
     (function() {
+        // show notice if redirected after password change
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('password_changed') === '1') {
+            const alertBox = document.getElementById('alert');
+            alertBox.textContent = 'Đổi mật khẩu thành công. Vui lòng đăng nhập lại.';
+            alertBox.style.display = 'block';
+            alertBox.style.padding = '12px 16px';
+            alertBox.style.borderRadius = '8px';
+            alertBox.style.marginBottom = '16px';
+            alertBox.style.border = '1px solid';
+            alertBox.style.background = '#102a1b';
+            alertBox.style.borderColor = '#065f46';
+            alertBox.style.color = '#bbf7d0';
+        }
         const form = document.querySelector('form[action="/login"][method="POST"]');
         if (!form) return;
         const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
