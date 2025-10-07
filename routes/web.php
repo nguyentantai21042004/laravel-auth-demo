@@ -17,6 +17,37 @@ Route::get('/', function () {
     return view('home');
 })->name('home');
 
-Route::get('/about', function () {
-    return view('about');
-})->name('about');
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');
+
+Route::get('/register', function () {
+    return view('register');    
+})->name('register');
+
+Route::get('/login', function () {
+    return view('login');
+})->name('login');
+
+Route::post('/login', function () {
+    // TODO: handle auth later
+    return back();
+});
+
+Route::get('/profile', function () {
+    return view('profile-edit');
+})->name('profile.edit');
+
+Route::put('/profile/update', function () {
+    // TODO: update profile later
+    return back();
+});
+
+Route::put('/profile/password', function () {
+    // TODO: change password later
+    return back();
+});
+
+Route::get('/profile-edit', function () {
+    return view('profile-edit');
+})->name('profile-edit');

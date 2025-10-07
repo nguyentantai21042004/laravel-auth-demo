@@ -15,21 +15,12 @@
             </div>
 
             <div class="pt-8 space-y-3">
-                @if (Route::has('login'))
-                <a href="{{ route('login') }}" class="btn btn-primary">
-                    Đăng nhập
-                </a>
-                @endif
-
-                @if (Route::has('register'))
-                <a href="{{ route('register') }}" class="btn btn-secondary">
-                    Đăng ký tài khoản
-                </a>
-                @endif
+                <a href="/login" class="btn btn-primary">Login</a>
+                <a href="/register" class="btn btn-secondary">Register</a>
             </div>
 
             <div class="pt-8 text-sm">
-                <p>Demo for PHP/Laravel Interview</p>
+                <p>Demo for PHP/Laravel</p>
             </div>
         </div>
     </div>
