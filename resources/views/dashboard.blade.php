@@ -89,6 +89,16 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Danh sách người dùng (API)</h3>
+                        <p class="card-description">Render từ dữ liệu /api/users</p>
+                    </div>
+                    <div id="users-list" class="space-y-2">
+                        <div class="text-sm link-muted">Đang tải...</div>
+                    </div>
+                </div>
             </div>
 
             <div class="pt-8 space-y-3">
@@ -98,5 +108,38 @@
             </div>
         </div>
     </div>
+    <script>
+    (function() {
+        const usersEl = document.getElementById('users-list');
+        if (!usersEl) return;
+        const token = localStorage.getItem('jwt');
+        fetch('/api/users', {
+            headers: token ? { 'Authorization': 'Bearer ' + token } : {}
+        })
+            .then(async (res) => {
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return res.json();
+            })
+            .then((data) => {
+                // Laravel paginator returns { data: [...], ... }
+                const list = Array.isArray(data?.data) ? data.data : (Array.isArray(data) ? data : []);
+                if (!list.length) {
+                    usersEl.innerHTML = '<div class="text-sm link-muted">Không có người dùng</div>';
+                    return;
+                }
+                usersEl.innerHTML = '';
+                list.forEach((u) => {
+                    const row = document.createElement('div');
+                    row.className = 'flex justify-between card';
+                    row.style.padding = '8px 12px';
+                    row.innerHTML = '<span>'+ (u.name || '(no name)') +'</span><span class="link-muted">'+ (u.email || '') +'</span>';
+                    usersEl.appendChild(row);
+                });
+            })
+            .catch((err) => {
+                usersEl.innerHTML = '<div class="text-sm" style="color:#ef4444">Lỗi tải người dùng: '+ err.message +'</div>';
+            });
+    })();
+    </script>
 </body>
 </html>

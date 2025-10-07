@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng ký - PHP Demo</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body>
@@ -81,5 +82,33 @@
             </div>
         </div>
     </div>
+    <script>
+    (function() {
+        const form = document.querySelector('form[action="/register"][method="POST"]');
+        if (!form) return;
+        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const payload = Object.fromEntries(formData.entries());
+            try {
+                const res = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': token,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json().catch(() => ({ ok: res.ok }));
+                if (!res.ok) throw new Error(data.message || 'Đăng ký thất bại');
+                window.location.href = '/login';
+            } catch (err) {
+                console.error(err);
+            }
+        });
+    })();
+    </script>
 </body>
 </html>
